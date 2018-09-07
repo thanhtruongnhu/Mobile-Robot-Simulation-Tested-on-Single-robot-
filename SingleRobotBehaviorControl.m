@@ -12,9 +12,9 @@ waypoints = [1.5    1.5;  % If we have more robot for example 3 robots: robot 1 
     %              5.25    8.25 ;
     %              7.25    8.75 ;
     %              11.75   10.75;
-%     0.997  0.877];
-            0.2  0.2
-            0.5  0.1];
+    %     0.997  0.877];
+    0.2  0.2
+    0.5  0.1];
 [nw,n] = size(waypoints);     %Where m = number of waypoints, (n/2)= nb = number of robots
 nb = (n/2);
 
@@ -27,7 +27,7 @@ for  id  = 1:nb
     F(id,:)  = [initPose, initVec];
 end
 
-Robot_2    = Robot_2(waypoints,F,nb,nw);
+Robot    = Robot(waypoints,F,nb,nw);
 
 dt = 0.14;               % Sample time [s]
 tVec = 0:dt:5000;        % Time array
@@ -106,9 +106,9 @@ for p_idx = 1: numel(tVec) % pose index
     tic; %Start timer
     %% Receiving data from Tracking System (Reading data from 9xstream modem)
     BytesAvailable = chn1.BytesAvailable; % (observation only)
-
     
-    while (newData == false) 
+    
+    while (newData == false)
         rb = fread(chn1,1,'uint8');
         if recvInProgress == true
             if rb ~= endMarker_in
@@ -128,32 +128,30 @@ for p_idx = 1: numel(tVec) % pose index
     end
     
     if  newData == true
-        Robot_2(1).x(1) = (receivedBytes(1)*254 + receivedBytes(2))/1000; %Robot(1).x(1)
-        Robot_2(1).x(2) = (receivedBytes(3)*254 + receivedBytes(4))/1000; %Robot(1).x(2)
+        Robot(1).x(1) = (receivedBytes(1)*254 + receivedBytes(2))/1000; %Robot(1).x(1)
+        Robot(1).x(2) = (receivedBytes(3)*254 + receivedBytes(4))/1000; %Robot(1).x(2)
         angle = deg2rad(receivedBytes(5)*254 + receivedBytes(6));
-        [filterAngle,Robot_2(1).angle] = UpdateFilterMatrix(filterAngle,angle);
+        [filterAngle,Robot(1).angle] = UpdateFilterMatrix(filterAngle,angle);
         newData = false;
-        angle_observe(p_idx,1) = Robot_2(1).angle; %Init angle (observation only)
+        angle_observe(p_idx,1) = Robot(1).angle; %Init angle (observation only)
     end
     
     %% Calculating Control Vector and Wheels' Speed
-    Robot_2 = ControlVector_2(Robot_2,nb,stopflag);
-    [Robot_2,angle_observe(p_idx,3)] = DiffWheelKinematics_3(Robot_2,nb);
-    [Robot_2,stopflag] = StopCondition(Robot_2,stopflag,nb);
-    w_observe(p_idx,:) = Robot_2(1).w;  % (observation only)
-    angle_observe(p_idx,2) = Robot_2(1).angle; %Desired angle (observation only)
+    Robot = ControlVector(Robot,nb,stopflag);
+    [Robot,angle_observe(p_idx,3)] = DiffWheelKinematics(Robot,nb);
+    [Robot,stopflag] = StopCondition(Robot,stopflag,nb);
+    w_observe(p_idx,:) = Robot(1).w;  % (observation only)
+    angle_observe(p_idx,2) = Robot(1).angle; %Desired angle (observation only)
     
     %% Trasmitting data to robots (Writing data to 9xstream modem)
-    [wl,wr] = WheelSpeedModify(Robot_2(1).w(1),Robot_2(1).w(2));
+    [wl,wr] = WheelSpeedModify(Robot(1).w(1),Robot(1).w(2));
     w_treated_observe(p_idx,:) = [wl,wr]; % (observation only)
     [wl_quo, wl_rem, wl_sign, wr_quo, wr_rem, wr_sign] = ValueConverter4Transmit(wl,wr);
     toc; %Stop timer
-
+    
     disp('Start Writing')
     fwrite(chn2,[startMarker_out wl_quo wl_rem wl_sign wr_quo wr_rem wr_sign endMarker_out],'async');
     pause(0.1) % Timer for 20Hz control rate
-
-        
     
 end
 

@@ -1,4 +1,4 @@
-classdef Robot_2
+classdef Robot
    properties 
       x         % gia tri ban dau
       angle     % gia tri ban dau
@@ -8,10 +8,10 @@ classdef Robot_2
    end
         
    methods
-        function obj = Robot_2(waypoints,F,nb,nw) %Input 1 ma tran voi 5 thanh phan: x dot, y dot...
+        function obj = Robot(waypoints,F,nb,nw) %Input 1 ma tran voi 5 thanh phan: x dot, y dot...
 %           ,x (initial), y(initial), angle(goc heading ban dau)   
             if nargin ~= 0            
-            obj(nb) = Robot_2;
+            obj(nb) = Robot;
             
                 for id = 1:nb            
                     obj(id).x(1)    = F(id,1);

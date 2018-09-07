@@ -1,4 +1,4 @@
-function Va = allignVel_2(id,Robot)
+function Va = allignVel(id,Robot)
 global count
  
  Va = Robot(id).waypoints(count(id),:) - Robot(id).x;     

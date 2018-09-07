@@ -1,4 +1,4 @@
-function [Robot,theta] = DiffWheelKinematics_3(Robot,nb)
+function [Robot,theta] = DiffWheelKinematics(Robot,nb)
 global L R dt
 f = 1; % Downgrade/upgrade the effect (importance) of theta
 

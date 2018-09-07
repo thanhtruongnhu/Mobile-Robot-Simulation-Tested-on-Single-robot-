@@ -1,4 +1,4 @@
-function [Robot] = ControlVector_2(Robot,nb,stopflag)
+function [Robot] = ControlVector(Robot,nb,stopflag)
 
 Vs = zeros(1,2);
 Vc = zeros(1,2);
@@ -18,7 +18,7 @@ for id = 1 : nb
                 Vc = Vc + Vc_comp;  % Vector combination (Coherent Velocity)
             end
         end
-                Va = allignVel_2(id,Robot);       % Allignment Velocity
+                Va = allignVel(id,Robot);       % Allignment Velocity
 
         Robot(id).v = gamma*(sigma*Vc + Va) + rho*Vs; % CONTROL VECTOR
 
