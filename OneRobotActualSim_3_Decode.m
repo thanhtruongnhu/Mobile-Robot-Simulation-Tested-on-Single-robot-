@@ -12,9 +12,9 @@ waypoints = [1.5    1.5;  % If we have more robot for example 3 robots: robot 1 
     %              5.25    8.25 ;
     %              7.25    8.75 ;
     %              11.75   10.75;
-%     0.997  0.877];
-            0.2  0.2
-            0.5  0.1];
+    0.997  0.877];
+%             0.2  0.2
+%             0.5  0.1];
 [nw,n] = size(waypoints);     %Where m = number of waypoints, (n/2)= nb = number of robots
 nb = (n/2);
 
