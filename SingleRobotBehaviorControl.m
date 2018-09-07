@@ -1,3 +1,16 @@
+% =======================Single Robot Behavior Control===================
+% 
+% Instructed by:    MSc. Pham Duy Hung
+% Coded by:         Thanh Truong Nhu, BKU
+% Date:             September 7, 2018
+% Location:         University of Engineering and Technology
+% If you counter any problem regarding this code, please don't hesitate to
+% contact me via my email: thanhtruong.kyle@gmail.com
+% 
+% =========================================================================
+% Thank you & Happy coding !
+% Code starts below this line:
+% =========================================================================
 clear
 clc
 close all
