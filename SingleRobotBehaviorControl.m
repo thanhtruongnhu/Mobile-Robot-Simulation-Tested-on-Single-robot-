@@ -20,14 +20,14 @@ global r_a r_nm count
 % Waypoints should be input by excel files for different robots(id): is an
 % N-by-(2*nb) matrix where N is number of waypoints for each robot (each
 % robot must have the same number of waypoints)
-waypoints = [1.5    1.5;  % If we have more robot for example 3 robots: robot 1 [column 1&2]...
-    %              1.25    1.75 ;  % robot 2 [column 3&4], robot 3 [column 5,6];
-    %              5.25    8.25 ;
-    %              7.25    8.75 ;
-    %              11.75   10.75;
-    %     0.997  0.877];
-    0.2  0.2
-    0.5  0.1];
+waypoints = [0    0;  % If we have more robot for example 3 robots: robot 1 [column 1&2]...
+    1.092    0.154 ;  % robot 2 [column 3&4], robot 3 [column 5,6];
+    0.784    0.644 ;
+    0.2      0.2 ;
+    0.112   0.637;
+    0.43    1.106;
+    0.784    0.644 ;
+    1.141  0.931];
 [nw,n] = size(waypoints);     %Where m = number of waypoints, (n/2)= nb = number of robots
 nb = (n/2);
 
@@ -42,7 +42,7 @@ end
 
 Robot    = Robot(waypoints,F,nb,nw);
 
-dt = 0.1;               % Sample time [s]
+dt = 0.12;               % Sample time [s]
 tVec = 0:dt:5000;        % Time array
 
 % Define Vehicle
@@ -84,9 +84,6 @@ if ~isempty(instrfind)
     delete(instrfind);
 end
 
-%% Set up Plot
-% hold on
-% figure (1)
 %% Set up COM ports
 chn1 = serial('COM8');
 chn2 = serial('COM6');
@@ -118,7 +115,7 @@ for p_idx = 1: numel(tVec) % pose index
     
     tic; %Start timer
     %% Receiving data from Tracking System (Reading data from 9xstream modem)
-    BytesAvailable = chn1.BytesAvailable; % (observation only)
+    BytesAvailable = chn1.BytesAvailable % (observation only)
     
     
     while (newData == false)
@@ -143,7 +140,7 @@ for p_idx = 1: numel(tVec) % pose index
     if  newData == true
         Robot(1).x(1) = (receivedBytes(1)*254 + receivedBytes(2))/1000; %Robot(1).x(1)
         Robot(1).x(2) = (receivedBytes(3)*254 + receivedBytes(4))/1000; %Robot(1).x(2)
-        angle = deg2rad(receivedBytes(5)*254 + receivedBytes(6));
+        angle = deg2rad (receivedBytes(5)*254 + receivedBytes(6));
         [filterAngle,Robot(1).angle] = UpdateFilterMatrix(filterAngle,angle);
         newData = false;
         angle_observe(p_idx,1) = Robot(1).angle; %Init angle (observation only)
