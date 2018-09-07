@@ -42,7 +42,7 @@ end
 
 Robot    = Robot(waypoints,F,nb,nw);
 
-dt = 0.14;               % Sample time [s]
+dt = 0.1;               % Sample time [s]
 tVec = 0:dt:5000;        % Time array
 
 % Define Vehicle
@@ -95,7 +95,7 @@ chn2.OutputBufferSize   = 1024;     %bytes
 
 fopen(chn1);
 fopen(chn2);
-disp('Start reading')
+disp('Channels Opened')
 readasync(chn1)
 flushinput (chn1); %Erase Input Buffer (Erase buffer received from Rasp)
 flushoutput(chn2);
@@ -164,7 +164,7 @@ for p_idx = 1: numel(tVec) % pose index
     
     disp('Start Writing')
     fwrite(chn2,[startMarker_out wl_quo wl_rem wl_sign wr_quo wr_rem wr_sign endMarker_out],'async');
-    pause(0.1) % Timer for 20Hz control rate
+    pause(dt) % Timer for 20Hz control rate
     
 end
 
